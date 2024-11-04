@@ -1,7 +1,7 @@
 pragma circom 2.0.0;
 
-include "circomlib/eddsaposeidon.circom";
-include "circomlib/comparators.circom";
+include "circomlib/circuits/eddsaposeidon.circom";
+include "circomlib/circuits/comparators.circom";
 
 template EdDSAVerification() {
     // EdDSA Verification Component

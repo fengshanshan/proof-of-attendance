@@ -46,6 +46,9 @@ async function generateEdDSAInputs(username = "user_123", nonce = 1) {
     // Sign the raw hash
     const signature = eddsa.signPoseidon(privateKey, msgHashRaw);
 
+    // Ax, Ay => pubKey
+    // R8x, R8y, S, (R,S) signature
+    // M, nonce, timestamp M = message hash, (username, nonce, timestamp) = message
     const inputArr = [
         1,
         bigIntToString(F.toObject(pubKey[0])),
