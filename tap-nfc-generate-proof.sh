@@ -36,6 +36,6 @@ echo "----- Generate zk-proof -----"
 # Generate a zk-proof associated to the circuit and the witness. This generates proof.json and public.json
 snarkjs groth16 prove ./build/${CIRCUIT}_final.zkey ./build/witness.wtns ./build/proof.json ./build/public.json
 
-echo "----- Verify the proof -----"
+#echo "----- Verify the proof -----"
 # Verify the proof
-snarkjs groth16 verify ./build/verification_key.json ./build/public.json ./build/proof.json
+#snarkjs groth16 verify ./build/verification_key.json ./build/public.json ./build/proof.json

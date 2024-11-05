@@ -1,7 +1,7 @@
 # Proof of Attendance
 The idea comes from the hackathon of Invisible Garden.
 
-We use zkp to verify the attendance for each participant.
+We use zkp to achieve automatically everyday check-in process for the participants and still keep the privacy of the sensitive information.
 
 # Technical Architecture
 The technical architecture is as follows:
