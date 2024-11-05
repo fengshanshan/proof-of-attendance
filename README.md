@@ -8,4 +8,38 @@ The technical architecture is as follows:
 
 ![technical architecture](./docs/technical_architecture.png)
 
-to be continued...
+# usage
+
+## 1. install dependencies
+```
+yarn 
+```
+
+## 2. compile the circuit and setup verification process
+```
+./setup.sh
+```
+all the files will be generated in the build folder.
+
+### 3. start the nfc-device-simulator and server
+```
+cd nfc-device-simulator
+yarn start
+```
+
+```
+cd ../server
+go run main.go
+```
+
+### 4. interact with the nfc-device-simulator to generate the proof
+```
+./tap-nfc-generate-proof.sh
+```
+
+### 5. verify the proof and record the attendance
+```
+./verify-and-record.sh
+```
+
+
