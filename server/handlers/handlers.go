@@ -51,15 +51,10 @@ func (s *Server) HandleSubmitProof(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Decoded proof: %+v", proof) // 添加这行来查看解析后的数据
-
 	// 验证proof (这里需要调用智能合约的verify方法)
 	isValid := verifier.VerifyProofWithContract(proof.ProofData)
 
 	proofStr, err := json.Marshal(proof.ProofData)
-
-	log.Printf("proof str: %s", string(proofStr))
-
 	if err != nil {
 		log.Printf("Error marshalling proof: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -69,17 +64,45 @@ func (s *Server) HandleSubmitProof(w http.ResponseWriter, r *http.Request) {
 	// 获取当前日期（使用UTC时间）
 	today := time.Now().UTC().Format("2006-01-02")
 
+	// 在插入之前先检查记录是否存在
+	var exists bool
+	err = s.db.QueryRow(`
+		SELECT EXISTS(
+			SELECT 1 FROM attendance_records 
+			WHERE user_name = $1 AND date = $2
+		)`, proof.UserName, today).Scan(&exists)
+
+	if err != nil {
+		log.Printf("Error checking existing record: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if exists {
+		log.Printf("User %s already has an attendance record for %s", proof.UserName, today)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": false,
+			"message": "Already submitted attendance for today",
+		})
+		return
+	}
+
 	// 存储记录
-	_, err = s.db.Exec(`
+	result, err := s.db.Exec(`
 		INSERT INTO attendance_records (user_name, is_valid, proof, date)
-		VALUES ($1, $2, $3, $4)
-		ON CONFLICT (user_name, date) DO UPDATE 
-		SET is_valid = $2, proof = $3`, proof.UserName, isValid, string(proofStr), today)
+		VALUES ($1, $2, $3, $4)`, proof.UserName, isValid, string(proofStr), today)
 
 	if err != nil {
 		log.Printf("Error saving attendance record: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("Error getting rows affected: %v", err)
+	} else {
+		log.Printf("Rows affected: %d", rowsAffected)
 	}
 
 	json.NewEncoder(w).Encode(map[string]interface{}{

@@ -78,6 +78,7 @@ func VerifyProofWithContract(proofData ProofData) bool {
 		return false
 	}
 
+	log.Printf("Verification result: %v", isValid)
 	return isValid
 }
 
