@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres:13-alpine
+    ports:
+    - 127.0.0.1:5433:5432
+    environment:
+      POSTGRES_USER: proof_of_attendance
+      POSTGRES_PASSWORD: Th3iN2p5xK9mV4qL8wE7
+      POSTGRES_DB: attendance_record_db
+    volumes:
+    - attendance_record_db:/var/lib/postgresql/data
+
+volumes:
+  attendance_record_db: {}
