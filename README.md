@@ -21,7 +21,12 @@ yarn
 ```
 all the files will be generated in the build folder.
 
-### 3. start the nfc-device-simulator and server
+## 3. export the verifier.sol and deploy it to the chain
+```
+forge create --rpc-url $YOUR_RPC_URL --private-key $YOUR_PRIVATE_KEY --etherscan-api-key $YOUR_ETHERSCAN_API_KEY contracts/verifier.sol:Groth16Verifier
+```
+
+## 4. start the nfc-device-simulator and server
 ```
 cd nfc-device-simulator
 yarn start
@@ -32,12 +37,12 @@ cd ../server
 go run main.go
 ```
 
-### 4. interact with the nfc-device-simulator to generate the proof
+## 5. interact with the nfc-device-simulator to generate the proof
 ```
 ./tap-nfc-generate-proof.sh
 ```
 
-### 5. verify the proof and record the attendance
+## 6. verify the proof and record the attendance
 ```
 ./verify-and-record.sh
 ```
